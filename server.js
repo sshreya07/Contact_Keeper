@@ -1,6 +1,11 @@
 const express = require('express');     //syntax known as common js to import modules
+const connectDB = require('./config/db');
 
-const app = express();      //initialise express in a variable app
+//initialise express in a variable app
+const app = express();
+
+//connecting Database
+connectDB();
 
 app.use(express.json());
 
@@ -9,4 +14,4 @@ app.use('/api/users', require('./routes/users'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
