@@ -15,15 +15,38 @@ exports.createUser = async (req, res, next) => {
 
     const { name, email, password } = req.body; 
     
-    //create user
-    const user = await User.create({
-        name, 
-        email,
-        password,
-    });     //create data in our database
+   try {
+        //create user
+        const user = await User.create({
+            name, 
+            email,
+            password,
+        });     //create data in our database
+
+
+        sendTokenResponse(user, 201, res);
+
+
+   } catch (err) {
+        console.error(err.message);
+        res.status(500).json({
+            success: false,
+            msg: 'server error'
+        })
+   }
+
     
-    res.status(201).json({
+}
+
+//Get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) => {
+    //create token
+    const token = user.getSignedJwtToken();
+
+    res
+        .status(statusCode)
+        .json({
         success: true,
-        data: user
+        token
     })
 }
