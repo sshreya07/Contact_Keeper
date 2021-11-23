@@ -2,6 +2,7 @@ const User = require('../models/User');
 const { validationResult } = require('express-validator');
 
 
+
 //@desc     login the users
 //@route    POST request from /api/v1/auth/login       
 //@access   Public
@@ -41,6 +42,21 @@ exports.login = async (req, res, next) => {
             msg: 'server error'
         })
     }
+
+}
+
+
+//@desc     get Logged In user
+//@route    GET request from /api/v1/auth/login       
+//@access   Private
+exports.getMe = async (req, res, next) => {
+    
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success: true,
+        data: user
+    })
 
 }
 
