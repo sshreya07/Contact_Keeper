@@ -5,7 +5,8 @@ const { protect } = require('../middleware/auth');
 const {
     getContacts,
     createContact,
-    updateContact
+    updateContact,
+    deleteContact
 } = require('../controllers/contacts');
 
 const { check } = require('express-validator');
@@ -21,5 +22,6 @@ router.route('/')
 
 router.route('/:id')
     .put(protect, updateContact)
+    .delete(protect, deleteContact)
 
 module.exports = router;

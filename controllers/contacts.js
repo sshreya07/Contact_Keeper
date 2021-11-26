@@ -39,7 +39,7 @@ exports.createContact = async (req, res, next) => {
 
     const user = await User.findById(req.user.id); //extracting user id from JWT by protecting the route
 
-    req.body.user = user;
+    req.body.user = user.id;
 
     try {
         const contact = await Contact.create(req.body);             //Create data in our database
@@ -56,10 +56,46 @@ exports.createContact = async (req, res, next) => {
 
 
 //@desc     Update a contact
-//@routes   PUT request from /api/contacts
+//@routes   PUT request from /api/contacts/:id
 //@access   Private
-exports.updateContact = async(req, rex, next) => {
+exports.updateContact = async(req, res, next) => {
 
+    let contact = await Contact.findById(req.params.id)
     
+    //make sure user is contact owner
+    if(contact.user.toString() !== req.user.id){
+        return res.status(401).json({
+            success: false,
+            msg:  `User has no Authorizations for updation of contact`
+        })
+    }
+
+    contact = await Contact.findOneAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    })
+
+    res.status(200).json({success: true, data: contact});
+
+}
+
+
+//@desc     Delete a contact
+//@routes   DELETE request from /api/contacts/:id
+//@access   Private
+exports.deleteContact = async( req, res, next) => {
+
+    let contact = await Contact.findById(req.params.id)
     
+    //make sure user is contact owner
+    if(contact.user.toString() !== req.user.id){
+        return res.status(401).json({
+            success: false,
+            msg: `User has no Authorizations for deletion of contact`
+        })
+    }
+
+    await contact.remove();
+
+    res.status(200).json({success: true, data: {}});
 }
