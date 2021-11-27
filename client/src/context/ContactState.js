@@ -1,5 +1,5 @@
 import React , { useReducer } from 'react';
-import uuid from 'uuid';    //just to generate random id coz we gonna work with some hard coded data before we deal with our backend data
+import {v4 as uuid} from 'uuid'   //just to generate random id coz we gonna work with some hard coded data before we deal with our backend data
 import ContactContext from './contactContext';
 import ContactReducer from './contactReducer';
 import {
@@ -45,22 +45,48 @@ const ContactState = props => {
                 phone:'233-323-1212',
                 type:'professional'
             }
-        ]
+        ],
+
+        current: null
     };
 
     const [state, dispatch] = useReducer(ContactReducer, initialState);
 
     //Add Contact
+    const addContact = contact => {
+        contact.id = uuid();
 
+        dispatch({
+            type: ADD_CONTACT,
+            payload: contact
+        })
+    }
 
     //Delete Contact
+    const deleteContact = id => {
 
+        dispatch({
+            type: DELETE_CONTACT,
+            payload: id
+        })
+    }
 
     //Set Current Contact
+    const setCurrent = contact => {
 
+        dispatch({
+            type: SET_CURRENT,
+            payload: contact
+        })
+    }
 
     //Clear Current Contact
+    const clearCurrent = () => {
 
+        dispatch({
+            type: CLEAR_CURRENT
+        })
+    }
 
     //Update Contact
 
@@ -74,7 +100,12 @@ const ContactState = props => {
     return (
         <ContactContext.Provider 
         value={{
-            contacts: state.contacts
+            contacts: state.contacts,
+            current: state.current,
+            addContact,
+            deleteContact,
+            setCurrent,
+            clearCurrent
         }}>
             
             {props.children}

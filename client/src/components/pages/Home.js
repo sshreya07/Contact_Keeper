@@ -1,4 +1,5 @@
 import React from 'react';
+import ContactForm from '../contacts/ContactForm';
 import Contacts from '../contacts/Contacts';
 
 const Home = () => {
@@ -6,7 +7,7 @@ const Home = () => {
         <div className="grid-2">
 
             <div>
-                {/* Contact Form */}
+                <ContactForm/>
             </div>
             
             <div>
